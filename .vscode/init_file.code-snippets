@@ -48,5 +48,20 @@
 				  "}",
 				],
 		"description": "initialize a file in cpp"
+	},
+	"main_cpp":{
+		"scope": "cpp",
+		"prefix": "main",
+		"body": [
+				  "",
+				  "int main(){",
+				  "",
+				  "$3",
+				  "",
+				  "",
+				  "    return 0;",
+				  "}",
+				],
+		"description": "initialize a file in cpp"
 	}
 }
