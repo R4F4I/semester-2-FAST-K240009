@@ -63,5 +63,32 @@
 				  "}",
 				],
 		"description": "initialize a file in cpp"
-	}
+	},
+	"header":{
+		"scope": "cpp",
+		"prefix": "header_init",
+		"body": [
+				  "// \"guard conditions\"",
+				  "#ifndef $1",
+				  "#define $1 :",
+				  "",
+				  "",
+				  "",
+				  "",
+				  "#endif",
+
+				],
+		"description": "initialize a file in cpp"
+	},
+	"iostream":{
+		"scope": "cpp",
+		"prefix": "iostream",
+		"body": [
+				  "#include <iostream>",
+				  "using namespace std;",
+				  "",
+
+				],
+		"description": "initialize a file in cpp"
+	},
 }

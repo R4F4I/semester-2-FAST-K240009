@@ -3,15 +3,15 @@
 ? |1. Design a class named BoardMarker with the following attributes:
 ? |    - Company (e.g., Dollar)
 ? |    - Color (e.g., black, red)
-? |    - Refillable (Boolean – specifies if the marker can be refilled)
-? |    - Ink status (Boolean – indicates whether the ink is empty)
+? |    - Refillable (Boolean - specifies if the marker can be refilled)
+? |    - Ink status (Boolean - indicates whether the ink is empty)
 ? |
 ? |Implement appropriate getters and setters for these attributes. Additionally, include the
 ? |following methods:
-? |- write() – This method should check if the ink is empty before allowing writing. If the
+? |- write() - This method should check if the ink is empty before allowing writing. If the
 ? |ink is empty, display a message indicating that writing is not possible; otherwise,
 ? |proceed with writing.
-? |- refill() – This method should verify if the marker is refillable. If it is, refill the ink and
+? |- refill() - This method should verify if the marker is refillable. If it is, refill the ink and
 ? |update the ink status; otherwise, display a message stating that the marker cannot be
 ? |refilled.
 
