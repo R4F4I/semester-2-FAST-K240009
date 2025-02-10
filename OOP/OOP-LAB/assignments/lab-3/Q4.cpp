@@ -24,33 +24,88 @@ class StationaryShop{
 private:
     string Items[20];
     double Prices[20];
-    int NumOfItems;
+    int NumOfItems=0;
 
 public:
-    void addItems(string itemName, double itemPrice){
-        Items[NumOfItems]=itemName;
-        Prices[NumOfItems]=itemPrice;
-        NumOfItems++;
+    void addItems(string name, double price){
+        if (NumOfItems<20){    
+            Items[NumOfItems]=name;
+            Prices[NumOfItems]=price;
+            NumOfItems++;
+        }
+        else{
+            cout<<"cannot add more items";
+        }
     }
-    void getItems(int i){}
+    void retrieveItems(){
+        cout<<"\n\n";
+        for(int i =0; i<NumOfItems;i++){
+            cout << i + 1 << ". " << Items[i]<<endl;
+        }
+        cout<<"\n\n";
+    }
     void editItemPrices(int i,double itemPrice){
         Prices[i]=itemPrice;
     }
     void displayItems(){
         for (size_t i = 0; i < NumOfItems; i++)
         {
-            cout<<i<<": "<<Items[i]<<" "<<Prices[i]<<"\n";
+            cout<<"\n\n";
+            cout << Items[i] << " - $"  << Prices[i] << endl;
+            cout<<"\n\n";
         }
     }
     void generateReceipt(){
-        int quantity;
-        double total=0;
-        cout<<"Enter the quantity of items purchased: ";
-        cin>>quantity;
-        for (size_t i = 0; i < NumOfItems; i++)
-        {
-            cout<<i<<": "<<Items[i]<<" "<<Prices[i]<<"\n";
+        if (NumOfItems == 0) {
+            cout << "No items available in the shop.\n";
+            return;
         }
+        
+        int numItems;
+        cout << "Enter the number of items to purchase: ";
+        cin >> numItems;
+        string purchasedItems[20];
+        int quantities[20];
+
+        double total = 0;
+
+        // Collect item names and quantities
+        for (int i = 0; i < numItems; i++) {
+            string item;
+            int quantity;
+            cout << "Enter item name: ";
+            cin >> item;
+            cout << "Enter quantity: ";
+            cin >> quantity;
+
+            bool found = false;
+            for (int j = 0; j < NumOfItems; j++) {
+                if (Items[j] == item) {
+                    purchasedItems[i] = item;
+                    quantities[i] = quantity;
+                    total += Prices[j] * quantity;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                cout << "Item " << item << " not found in the shop.\n";
+                i--;  // Ask for input again
+            }
+        }
+
+        // Print receipt
+        cout << "\n--- Receipt ---\n";
+        cout << "Item " << "Quantity " << "Price \n";
+        for (int i = 0; i < numItems; i++) {
+            for (int j = 0; j < NumOfItems; j++) {
+                if (Items[j] == purchasedItems[i]) {
+                    cout << purchasedItems[i] <<" "<<quantities[i] << " $" << Prices[j] * quantities[i] << endl;
+                    break;
+                }
+            }
+        }
+        cout << "\nTotal: $" << total << endl;
     }
 };
 
@@ -60,14 +115,65 @@ public:
 
 int main(){
 
-    StationaryShop s;
-    s.addItems("pen",10);
-    s.addItems("pencil",5);
-    s.addItems("eraser",2);
-    s.addItems("sharpner",3);
-    s.displayItems();
 
+    StationaryShop shop;
+    int choice;
+    shop.addItems("pen",10);
+    shop.addItems("pencil",5);
+    shop.addItems("eraser",2);
+    shop.addItems("sharpner",3);
+    // shop.displayItems();
 
+    do {
+        cout << "\n--- Stationery Shop Menu ---\n";
+        cout << "1. Add Item\n";
+        cout << "2. Retrieve Items\n";
+        cout << "3. Edit Item Price\n";
+        cout << "4. View All Items with Prices\n";
+        cout << "5. Generate Receipt\n";
+        cout << "6. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                string item;
+                double price;
+                cout << "Enter item name: ";
+                cin>>item;
+                
+                cout << "Enter item price: ";
+                cin >> price;
+                shop.addItems(item, price);
+                break;
+            }
+            case 2:
+                shop.retrieveItems();
+                break;
+            case 3: {
+                int index;
+                double newPrice;
+                shop.displayItems();
+                cout << "Enter item index to edit price: ";
+                cin >> index;
+                cout << "Enter new price: ";
+                cin >> newPrice;
+                shop.editItemPrices(index, newPrice);
+                break;
+            }
+            case 4:
+                shop.displayItems();
+                break;
+            case 5:
+                shop.generateReceipt();
+                break;
+            case 6:
+                cout << "Exiting...\n";
+                break;
+            default:
+                cout << "Invalid choice. Please try again.\n";
+        }
+    } while (choice != 6);
 
     return 0;
 }

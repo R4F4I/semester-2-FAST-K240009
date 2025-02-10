@@ -24,66 +24,36 @@ private:
     
 public:
     string company,color,unit;
-    int waterCapacity;
+    double waterCapacity;
     
-    void set_company(string comp){
-        company = comp;
+    void set_company(string comp){company = comp;}
+    void set_color(string col){color = col;}
+    void set_unit(string u){unit = u;}
+    void set_waterCapacity(double wCap){waterCapacity = wCap;}
+
+    string get_company(){return company;}
+    string get_color(){return color;}
+    string get_unit(){return unit;}
+    double get_waterCapacity(){return waterCapacity;}
+
+    double l_to_ml_converter(double liters) {
+        return liters * 1000;  // 1 liter = 1000 milliliters
     }
-    void set_color(string col){
-        color = col;
-    }
-    void set_unit(string u){
-        unit = u;
-    }
-    void set_waterCapacity(int wCap){
-        waterCapacity = wCap;
+    double ml_to_l_converter(double ml) {
+        return ml / 1000;  // 1 liter = 1000 milliliters
     }
 
-    string get_company(){
-        return company;
-    }
-    string get_color(){
-        return color;
-    }
-    string get_unit(){
-        return unit;
-    }
-    int get_waterCapacity(){
-        return waterCapacity;
-    }
-
-    void l_to_ml_converter(){}
-    void l_to_ml_converter(){}
-
-    void drink(int amount, string unit){
-        int waterCap = get_waterCapacity();
-        
-        if (unit == "l")
-        {
+    void drink(double amount, string unit){
+        waterCapacity-=amount;
+        if (waterCapacity<1){
             unit = "ml";
-            amount*=1000;
+            ml_to_l_converter(waterCapacity);
         }
-        
-        if (get_unit()=="l")
-        {
-            set_unit("ml");
-            set_waterCapacity(1000*waterCap);
-        }
-        
-        
-
-        set_waterCapacity(waterCap-amount);
-
-        if (get_waterCapacity()<1)
-        {
-            unit = "ml";
-            
-            set_waterCapacity(1000*waterCap);
-        }
-        
+    }
+    void displayCapacity() {
+        cout << "Water capacity: " << waterCapacity << " ml (" << waterCapacity / 1000 << " l)" << endl;
     }
 
-    
 };
 
 
@@ -92,17 +62,27 @@ int main(){
 
     waterBottle b1;
 
-    b1.set_color("white");
-    b1.set_company("nestle");
-    b1.set_unit("l");
-    b1.set_waterCapacity(1.9);
+    b1.set_color("White");
+    b1.set_company("Nestle");
+    b1.set_waterCapacity(1500); // assum ml
 
-    b1.drink(200,"ml");
+    cout << "Before drinking:" << endl;
+    cout << "Color: " << b1.get_color() << endl;
+    cout << "Company: " << b1.get_company() << endl;
+    b1.displayCapacity(); // Display initial capacity
 
-    cout<<b1.get_color()<<"\n";
-    cout<<b1.get_company()<<"\n";
-    cout<<b1.get_unit()<<"\n";
-    cout<<b1.get_waterCapacity()<<"\n";
+    // Drink 200 ml of water
+    b1.drink(200, "ml");
+
+    cout << "\nAfter drinking 200 ml:" << endl;
+    b1.displayCapacity(); // Display updated capacity
+
+    // Drink 0.5 liters (500 ml)
+    b1.drink(500, "l");
+
+    cout << "\nAfter drinking 0.5 liters (500 ml):" << endl;
+    b1.displayCapacity(); // Display updated capacity
+
 
     return 0;
 }
