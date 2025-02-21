@@ -49,7 +49,9 @@ int main(){
     ValidateString str1("strinohj2");
     ValidateString str2("strinohj");
 
-    cout<<str1.validate()<<endl;
+    //if valid:1 else:0
+
+    cout<<str1.validate()<<endl; 
     cout<<str2.validate()<<endl;
 
 
