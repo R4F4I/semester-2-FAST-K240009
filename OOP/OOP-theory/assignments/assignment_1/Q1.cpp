@@ -47,6 +47,8 @@ skills, providing training and advice to improve their performance.
 
 using namespace std;
 
+const int MAX_ARR_SIZE = 2;
+
 /* 
 The university sports mentorship system involves two main roles: 
     mentors and learners (students).
@@ -154,6 +156,7 @@ The university sports mentorship system involves two main roles:
 class Skill
 {
 private:
+    static int timesCalled;
     string skillName,description;
     int skillID;
 public:
@@ -186,33 +189,37 @@ public:
         this->description = newDescription;
     }
 
+    ~Skill(){
+        cout << timesCalled++ << " Skill object destroyed." << endl;
+    }
+
 };
+
+int Skill::timesCalled = 0;
 
 
 
 class Sport
 {
 private:
-static int skillsCount;
+    int skillsCount=0;
     string name,description;
-    Skill requiredSkills[10];
+    Skill requiredSkills[MAX_ARR_SIZE];
     int sportID;
 public:
     Sport(){
         this->sportID = -1;
         this->name = "NA";
         this->description = "NA";
-        for (int i = 0; i < 10; i++) {
-            this->requiredSkills[i] = Skill();
-        }
     }
-    Sport(int sportID, string name, string description, Skill s)
+    Sport(int sportID, string name, string description, Skill requiredSkills[])
     {
         this->sportID = sportID;
         this->name = name;
         this->description = description;
-        for (int i = 0; i < 10; i++) {
-            this->requiredSkills[i] = Skill(s);
+        for (size_t i = 0; i < MAX_ARR_SIZE; i++)
+        {
+            this->requiredSkills[i] = requiredSkills[i];
         }
     }
     void addSkill(Skill s){
@@ -226,23 +233,24 @@ public:
                 requiredSkills[i].setSkillID(-1);
                 skillsCount--;
             }
-            
         }
-        
     }
 
-    
+    ~Sport(){
+        cout << "Sport object destroyed." << endl;
+    }
 };
 
 class Mentor;
 
 class Student
 {
+    
 private:
-static int sportsInterest;
+    int sportsInterest=0;
     string name;
-    Sport sportsInterests[10];
-    Mentor *mentorAssigned;
+    Sport sportsInterests[MAX_ARR_SIZE];
+    string mentorAssigned;
     int age,studentID;
 
 public:
@@ -251,12 +259,12 @@ public:
         this->studentID = -1;
         this->name = "NA";
     }
-    Student(int age, int studentID, string name,Mentor &mentorAssigned, Sport sportsInterests[]){
+    Student(int age, int studentID, string name,string mentorAssigned, Sport sportsInterests[]){
         this->age = age;
         this->studentID = studentID;
         this->name = name;
-        this->mentorAssigned = &mentorAssigned;
-        for (size_t i = 0; i < 10; i++)
+        this->mentorAssigned = mentorAssigned;
+        for (size_t i = 0; i < MAX_ARR_SIZE; i++)
         {
             this->sportsInterests[i] = sportsInterests[i];
         }
@@ -266,30 +274,32 @@ public:
     int getStudentAge(){return this->age;}
     string getStudentName(){return this->name;}
     
-    void registerForMentorship(Mentor &m);
-    void viewMentorDetails();
+    void registerForMentorship(Mentor *m);
+    /* {
+        m->assignLearner(*this);
+    } */
+    void viewMentorDetails(Mentor *m);
+    /* {
+        m->showMentorDetails();
+    } */
 
     void updateSportsInterest(Sport s){
         sportsInterests[sportsInterest++] = s;
     }
 
     ~Student(){
-        delete mentorAssigned;
+        cout << "Student object destroyed." << endl;
     }
-
 };
 
-int Student::sportsInterest=0;
+
 
 class Mentor
 {      
-private:
-
-static int underMentorship;
-
-    string name,sportsExpertise[10];
-    int mentorID,maxLearners = 10;
-    Student assignedLearners[10]; // 10 is the max limit of learners a mentor can have
+    int underMentorship=0;
+    string name,sportsExpertise[MAX_ARR_SIZE];
+    int mentorID,maxLearners = 2;
+    Student assignedLearners[MAX_ARR_SIZE]; // 10 is the max limit of learners a mentor can have
 
 public:
     // default constructor
@@ -297,10 +307,10 @@ public:
         this->mentorID = -1;
         this->maxLearners = -1;
         this->name = "NA";
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < MAX_ARR_SIZE; i++) {
             this->sportsExpertise[i] = "";
         }
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < MAX_ARR_SIZE; i++) {
             this->assignedLearners[i] = Student();
         }
     }
@@ -309,7 +319,7 @@ public:
         this->mentorID = mentorID;
         this->maxLearners = maxLearners;  
         this->name = name;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < MAX_ARR_SIZE; i++) {
             this->sportsExpertise[i] = "";
         }
         for (size_t i = 0; i < maxLearners; i++)
@@ -319,7 +329,7 @@ public:
         
     }
 
-    void viewMentorDetails(){
+    void showMentorDetails(){
         cout << "Mentor ID: " << this->mentorID << endl;
         cout << "Mentor Name: " << this->name << endl;
         cout << "Mentor Expertise: " << this->sportsExpertise << endl;
@@ -358,44 +368,58 @@ public:
         cout << "Guidance provided." << endl;
     }
 
+    ~Mentor(){
+        cout << "Mentor object destroyed." << endl;
+    }
 };
 
-int Mentor::underMentorship = 0;
+// int Mentor::underMentorship = 0;
 
-void Student::registerForMentorship(Mentor &m){
-        m.assignLearner(*this);
+void Student::registerForMentorship(Mentor *m){
+        m->assignLearner(*this);
     }
-void Student::viewMentorDetails(){
-    mentorAssigned->viewMentorDetails();
+void Student::viewMentorDetails(Mentor *m){
+    m->showMentorDetails();
 }
 
 
 
-
-int main(){
-
+int main() {
+    // Skills function correctly
+    cout << "Skills" << endl;
     Skill skill1(1, "Skill1", "Skill1 Description");
     Skill skill2(2, "Skill2", "Skill2 Description");
     Skill skill3(3, "Skill3", "Skill3 Description");
+    cout << "skills function correctly" << endl;
 
-    Sport sp1(1, "Sport1", "Sport1 Description", skill1);
-    Sport sp2(2, "Sport2", "Sport2 Description", skill2);
-    Sport sp3(3, "Sport3", "Sport3 Description", skill3);
+    Skill skills[MAX_ARR_SIZE] = {skill1, skill2};
 
-    Student s1,s2,s3;
+    // Sports function correctly
+    cout << "Sports" << endl;
+    Sport sp1(1, "Sport1", "Sport1 Description", skills);
+    Sport sp2(2, "Sport2", "Sport2 Description", skills);
+    cout << "sports function correctly" << endl;
 
-    Student Learners[3] = {s1,s2,s3};
+    Student s1, s2;
+    cout << "students function correctly" << endl;
 
-    Mentor m1(1, "Mentor1", 3, Learners);
-    Mentor m2(2, "Mentor2", 3, Learners);
-    Mentor m3(3, "Mentor3", 3, Learners);
+    Student Learners[MAX_ARR_SIZE] = {s1, s2};
 
-    Sport Sports[3] = {sp1,sp2,sp3};
+    cout << "Mentor" << endl;
+    Mentor m1(1, "Mentor1", 2, Learners);
+    cout << "Mentor function correctly" << endl;
 
+    Sport Sports[MAX_ARR_SIZE] = {sp1, sp2};
+    cout << "new sports arr" << endl;
 
-  Student st1(20, 1, "Student1", m1, Sports);
-  Student st2(21, 2, "Student2", m2,Sports);
-  Student st3(22, 3, "Student3", m3,Sports);
+    cout << "new student defined by para const" << endl;
+    Student st1(20, 1, "Student1", "mentor1", Sports);
+    cout << "defined successfully" << endl;
 
-  return 0;
+    st1.registerForMentorship(&m1);
+    st1.viewMentorDetails(&m1);
+
+    cout << "exiting..." << endl;
+
+    return 0;
 }
