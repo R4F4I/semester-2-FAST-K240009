@@ -52,23 +52,7 @@ public:
     int hits;
     
 
-    void hitBall(int &ballX, int &ballY, const string &direction){
-        if (direction == "up")
-        {
-            ballY++;
-        }
-        else if (direction == "down")
-        {
-            ballY--;
-        }
-        else if (direction == "left")
-        {
-            ballX--;
-        }
-        else if (direction == "right")
-        {
-            ballX++;
-        }
+    void hitBall(){
         this->hits++;
     }
 
@@ -91,7 +75,28 @@ public:
     int getY(){
         return y;
     }
-    void move(int dx, int dy){
+    void move(int dx, int dy,string move){
+        if (move == "up")
+        {
+            dx*=0;
+            dy*=1;
+        }
+        if (move == "down")
+        {
+            dx*=0;
+            dy*=-1;
+        }
+        if (move == "left")
+        {
+            dx*=-1;
+            dy*=0;
+        }
+        if (move == "right")
+        {
+            dx*=1;
+            dy*=0;
+        }
+        
         this->x += dx;
         this->y += dy;
     }
@@ -163,8 +168,8 @@ public:
         cout<< "enter y direction for " << team->teamName << " robot: ";
         cin >> ballY;
         // TODO: hit ball / move ball conflict, which one should move the ball?, 
-        team->robot->hitBall(ballX, ballY, direction);
-        Ball.move(ballX, ballY);
+        team->robot->hitBall();
+        Ball.move(ballX, ballY,direction);
     }
     void declareWinner(){
         if (teamOne.robot->hits < teamTwo.robot->hits)
@@ -189,10 +194,27 @@ public:
         cout << "Team One: " << teamOne.teamName << endl;
         cout << "Team Two: " << teamTwo.teamName << endl;
         cout << "goal position: " << Goal.x<<", "<< Goal.y<< endl;
-        while (!Goal.isGoalReached(ballX, ballY))
+        while (true)
         {
-            play(&teamOne);
-            play(&teamTwo);
+            if (!Goal.isGoalReached(ballX, ballY))
+            {
+                
+                play(&teamOne);
+                ballX = Ball.getX();
+                ballY = Ball.getY();
+            }
+            if (!Goal.isGoalReached(ballX, ballY))
+            {
+                play(&teamTwo);
+                ballX = Ball.getX();
+                ballY = Ball.getY();
+            }
+            else
+            {
+                break;
+            }
+            
+            
         }
         declareWinner();
     }
