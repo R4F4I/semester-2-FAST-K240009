@@ -21,7 +21,51 @@ needed.
 * Name:         Rafay Siddiqui
 * roll number:  24k-0009
 * section:      BAI-2A
-
+                                      ┌─────────────────────────────────┐                                       
+                                      │           Transport             │                                       
+                                      ├─────────────────────────────────┤                                       
+                                      │static int incrementor,transport │                                       
+                                      │string route[2]                  │                                       
+                                      │int TransportID                  │                                       
+                                      │Student *students[]              │                                       
+                                      │                                 │                                       
+                                      ├─────────────────────────────────┤                                       
+                                      │Transport()                      │                                       
+                                      │registerStudent(Student *s)      │                                       
+                                      │~Transport()                     │                                       
+                                      │                                 │                                       
+                                      └────────────────┬────────────────┘                                       
+                                                       │                                                        
+                                                       ▼                                                        
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                                   Student                                                    │
+├──────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│bool paidSemFee,registeredForTransport, attendance[]                                                          │
+│string name                                                                                                   │
+│int rollNO                                                                                                    │
+│Card *card                                                                                                    │
+├──────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│string getName()                                                                                              │
+│bool getPaidSemFee(),getCardActive(),getTransportStatus()                                                     │
+│void setCardActive(bool b),setTransportStatus(bool b),markAttendance(int dayOfMonth),displaySheet()           │
+│Student(bool cardActive = false, bool paidSemFee=false, bool registeredForTransport = false, string name="NA")│
+│~Student()                                                                                                    │
+└──────────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘
+                                                       │                                                        
+                                                       │                                                        
+                                                       ▼                                                        
+                                 ┌────────────────────────────────────────────┐                                 
+                                 │                   Card                     │                                 
+                                 ├────────────────────────────────────────────┤                                 
+                                 │bool active, isTapped                       │                                 
+                                 │int  cardID                                 │                                 
+                                 │static int incrementor                      │                                 
+                                 ├────────────────────────────────────────────┤                                 
+                                 │int getCardID()                             │                                 
+                                 │bool getActive(),getTapped()                │                                 
+                                 │void setActive(bool a),setTapped(bool t)    │                                 
+                                 │Card(bool active=false, bool isTapped=false)│                                 
+                                 └────────────────────────────────────────────┘                                 
 
 */
 
