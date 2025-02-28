@@ -35,6 +35,26 @@ private:
     string name, place;
 
 public:
+    void setName(string n){
+        this->name=n;
+    }
+    
+    void setPlace(string n){
+        this->place=n;
+    }
+    string getName(){
+        return this->name;
+    }
+    
+    string getPlace(){
+        return this->place;
+    }
+
+    Airports(){
+        this->name = "default airport";
+        this->place = "pakistan";
+    }
+
     Airports(string name, string place)
     {
         this->name = name;
@@ -52,15 +72,38 @@ private:
 public:
     void display()
     {
-
-        cout << this->status;
+        cout << "Flight Status: "   << this->status                 <<                                              endl;
+        cout << "Duration: "        << this->duration               << " minutes" <<                                endl;
+        cout << "Origin: "          << this->origin->getName()      << ", " << this->origin->getPlace()         <<  endl;
+        cout << "Destination: "     << this->destination->getName() << ", " << this->destination->getPlace()    <<  endl;
     }
-    Flight(string *origin, string *destination, string status.)
-    {
+    Flight(){
+        this->origin = new Airports;
+        this->destination = new Airports;
+        this->status = "scheduled";
+        this->duration = 19990;
+    }
+
+    Flight(Airports &origin, Airports &destination, string status, int duration) {
+        
+        this->origin = new Airports(origin);
+        this->destination = new Airports(destination);
+        this->status = status;
+        this->duration = duration;
+    }
+
+    ~Flight(){
+        delete this->origin;
+        delete this->destination;
     }
 };
 int main()
 {
+    Airports Karachi("Karachi Airport", "Karachi");
+    Airports Heathrow("Heathrow Airport", "London");
+
+    Flight flight1(Karachi, Heathrow, "scheduled", 420);
+    flight1.display();
 
     return 0;
 }

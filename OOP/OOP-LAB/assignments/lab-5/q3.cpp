@@ -52,6 +52,10 @@ public:
         foodName = "default";
         foodPrice = 0;
     }
+    menuItem(string fN, int fP){
+        foodName = fN;
+        foodPrice = fP;
+    }
 
     string getFoodName(){
         return this->foodName;
@@ -74,15 +78,32 @@ class Menu
 {
 private:
     menuItem *menuItems[10];
-    int count;
+static int count;
 public:
     void add(menuItem item){
-        *menuItems[count++] = item;
+        if (count<10) {
+            menuItems[count++] = new menuItem(item);
+        } else
+        {
+            cout << "Menu is full, cannot add more items." << endl;
+        }
+        
+        
     }
     void remove(menuItem item){
-        // decrement to overwrite the value at add
-        count--;
-        // *menuItems[count++] = item;
+        for (size_t i = 0; i < count; i++) {
+            if (
+                menuItems[i]->getFoodName() == item.getFoodName() && 
+                menuItems[i]->getFoodPrice() == item.getFoodPrice()
+            ) {
+                delete menuItems[i];
+                menuItems[i] = menuItems[count - 1];
+                menuItems[count - 1] = nullptr;
+                count--;
+                return;
+            }
+        }
+        cout << "Item not found in the menu." << endl;
     }
     void display(){
         for (size_t i = 0; i < 10; i++)
@@ -91,17 +112,16 @@ public:
         }
         
     }
-    bool isAvailable(menuItem mI){
+    bool isAvailable(menuItem *mI){
         for (size_t i = 0; i < 10; i++)
         {
             if (
-                menuItems[i]->getFoodName() == mI.getFoodName() && 
-                menuItems[i]->getFoodPrice()== mI.getFoodPrice()
+                menuItems[i]->getFoodName() == mI->getFoodName() && 
+                menuItems[i]->getFoodPrice()== mI->getFoodPrice()
                 )
             {
                 return true;
             }
-            
         }
         return false;
         
@@ -109,61 +129,92 @@ public:
 
     Menu(){
         menuItem j;
-        for (size_t i = 0; i < count; i++){
-            *menuItems[i] = j;
+        for (size_t i = 0; i < 10; i++){
+            menuItems[i] = nullptr;
         }        
     }
     ~Menu(){
-        for (size_t i = 0; i < count; i++)
+        for (size_t i = 0; i < 10; i++)
         {
             delete menuItems[i];
         }
         
-        delete[] menuItems;
+        // delete[] menuItems;
     }
 };
+
+int Menu::count = 0;
 
 class Payment
 {
 private:
-    /* data */
+    int payment,orderSize;
+    menuItem *order[10];
+    Menu *m;
 public:
-    Payment(/* args */);
-    ~Payment();
-};
 
-Payment::Payment(/* args */)
-{
-}
+Payment(int p, Menu& menu, menuItem order[], int orderSize) : payment(p), m(&menu) {
+    for (int i = 0; i < orderSize; i++) {
+        this->order[i] = new menuItem(order[i]);
+    }
+    for (int i = orderSize; i < 10; i++) {
+        this->order[i] = nullptr;
+    }
+    this->orderSize = orderSize;
+    }
 
-Payment::~Payment()
-{
-}
+    // setter for payment
+    void Order() {
 
-
-void Order(menuItem order[],Menu m,int orderSize){
-    int payment=0;
-    for (size_t i = 0; i < orderSize; i++)
-    {
-        if (m.isAvailable(order[i]))
-        {
-            payment+=order[i].getFoodPrice();
-        } else
-        {
-            cout<<"order not found\n";
+        for (size_t i = 0; i < orderSize; i++) {
+    
+            if (m->isAvailable(order[i])) {
+        
+                this->payment+= order[i]->getFoodPrice();
+            } else {
+                cout<<"order not found\n";
+            }
         }
     }
-    
-    
-    
+    int getPayment(){
+        return this->payment;
+    }
+    ~Payment(){
+        for (size_t i = 0; i < 10; i++)
+        {
+            delete order[i];
+        }
+        // delete m;
+    }
+};
 
-}
+
+
 
 
 
 int main(){
 
+    Menu menu1;
+    
+    // create items
+    menuItem item1("Burger",150),item2("Pizza",300),item3("taco",350);
+    
+    // add items into the menu
+    menu1.add(item1);
+    menu1.add(item2);
+    menu1.add(item3);
+    
+    // order the items
+    menuItem order1[] = {item1, item2,item3};
+    
+    // define a payment (order size array presented for standard)
+    Payment payment(0, menu1, order1, 3);
+    // finalize  a payment
+    payment.Order();
 
+    // display the payment
+    cout << "Total Payment: " << payment.getPayment() << " dollars" << endl;
 
 
     return 0;
