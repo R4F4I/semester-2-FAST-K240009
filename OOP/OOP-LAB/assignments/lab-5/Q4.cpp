@@ -54,7 +54,10 @@ public:
         this->name = "default airport";
         this->place = "pakistan";
     }
-
+    ~Airports(){
+        
+        cout<< "airport discarded"<<endl;
+    }
     Airports(string name, string place)
     {
         this->name = name;
@@ -93,8 +96,7 @@ public:
     }
 
     ~Flight(){
-        delete this->origin;
-        delete this->destination;
+        cout<< "flight plan discarded"<<endl;
     }
 };
 int main()
@@ -104,6 +106,6 @@ int main()
 
     Flight flight1(Karachi, Heathrow, "scheduled", 420);
     flight1.display();
-
+ 
     return 0;
 }
