@@ -49,6 +49,11 @@ public:
         this->model = model;
         this->year = year;
     }
+    void display(){
+        cout<< "make: "<<make<< endl;
+        cout<< "model: "<<model<< endl;
+        cout<< "year: "<<year<< endl;
+    }
 };
 
 class Car: public Vehicle
@@ -60,9 +65,14 @@ public:
         this->doors = 0;
         this->gas = 0;
     }
-        Car(int doors, int gas, string make, string model, int year):Vehicle(make, model, year){
+    Car(int doors, int gas, string make, string model, int year):Vehicle(make, model, year){
         this->doors = doors;
         this->gas = gas;
+    }
+    void display(){
+        Vehicle::display();
+        cout<< "doors: "<<doors<< endl;
+        if (gas != -1) cout<< "gas: "<<gas<< endl;
     }
 };
 
@@ -70,22 +80,29 @@ public:
 class ElectricCar: public Car
 {
 private:
-    /* data */
+    int battery;
 public:
-    ElectricCar(/* args */){
+    ElectricCar():Car(){
+        this->battery = 0;
 
+    }
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``v gas is nulled for e cars
+    ElectricCar(int battery, int doors, string make, string model, int year):Car(doors, -1, make, model, year){
+        this->battery = battery;
+    }
+    void display(){
+        Car::display();
+        cout<< "battery: "<<battery<< endl;
     }
 };
 
 
 
-
-
-
-
-
 int main(){
 
+    ElectricCar tesla(100, 4, "Tesla", "Model S", 2021);
+    tesla.display();
+    
 
 
 
