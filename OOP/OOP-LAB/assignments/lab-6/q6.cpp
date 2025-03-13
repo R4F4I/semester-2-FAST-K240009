@@ -75,7 +75,7 @@ public:
     }
 
     void display(){
-        Device::display();
+        // Device::display();
         cout << "SIM Slots: " << this->SIMslots << endl;
     }
 
@@ -93,7 +93,7 @@ public:
         this->stylusSupport = sSup;
     }
     void display(){
-        Device::display();
+        // Device::display();
         cout << "Stylus Support: " << (this->stylusSupport ? "Yes" : "No") << endl;
     }
 };
@@ -112,6 +112,7 @@ public:
          Tablet(brand,model,stylus){}
 
     void display(){
+        Device::display();
         Smartphone::display();
         Tablet::display();
     }

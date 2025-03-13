@@ -113,7 +113,12 @@ public:
 };
 
 
+/* 
+technically diamond problem is  present here because both student and teacher are inheriting from person class
+and graduate student is inheriting from both student and teacher class yet the display function is not ambiguous
+because the display function is being called explicitly from the student and teacher class
 
+*/
 
 
 
