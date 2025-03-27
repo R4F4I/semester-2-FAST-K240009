@@ -33,10 +33,27 @@ using namespace std;
 
 const int MAX_ARR_SIZE = 5,daysInMonth = 30;
 
-class Card
+class incrementor{
+    private:
+    public:
+    static int inc;
+    incrementor(){
+        inc=0;
+    }
+    int getIncrementor(){
+        return inc;
+    }
+    int Increment(){
+        return inc++;
+    }
+};
+
+int incrementor::inc = 0;
+
+class Card : public incrementor
 {
 private:
-static int incrementor;
+    // incrementor i;
     bool active,isTapped;
     int cardID;
 
@@ -62,19 +79,41 @@ public:
     Card(bool active=false, bool isTapped=false ){
         this->active = active;
         this->isTapped = isTapped;
-        this->cardID = incrementor++;
+        this->cardID = incrementor::Increment();
     }
     ~Card(){
         cout << "Card object destroyed." << endl;
     }
 };
 
-int Card::incrementor = 0;
+// int Card::incrementor = 0;
 
-class Student{
+class Person : public incrementor
+{
+
+private:
+    // incrementor i;
+    string name;
+    int rollNO;
+
+public:
+    Person(string name="NA") : name(name), rollNO(incrementor::Increment()) {}
+    
+    string getName(){
+        return this->name;
+    }
+    
+    int getRollNO(){
+        return this->rollNO;
+    }
+
+};
+
+class Student : public incrementor
+{
 
 
-    static int incrementor;
+        // incrementor i;
         // a student can pay fees but not have an active card, a card can only be active if the student has paid the fees, a transport can only provided if both are true
         bool paidSemFee,registeredForTransport, attendance[daysInMonth];
         string name;
@@ -112,7 +151,7 @@ class Student{
             paidSemFee(paidSemFee), 
             registeredForTransport(registeredForTransport), 
             name(name), 
-            rollNO(incrementor++) 
+            rollNO(incrementor::Increment()) 
             {
             
             /* this->paidSemFee = paidSemFee;
@@ -140,6 +179,15 @@ class Student{
                 cout <<  attendance[i] << " ";
             }
         }
+
+        void display(){
+            cout << "Name: " << name << endl;
+            cout << "Roll No: " << rollNO << endl;
+            cout << "Paid Semester Fee: " << paidSemFee << endl;
+            cout << "Registered for Transport: " << registeredForTransport << endl;
+            cout << "Card Active: " << card->getActive() << endl;
+            cout << "Transport Status: " << registeredForTransport << endl;
+        }
     
         ~Student(){
             delete card;
@@ -147,19 +195,19 @@ class Student{
         }
     };
 
-int Student::incrementor = 0;
+// int Student::incrementor = 0;
 
 // class does not explicitly  define a bus or a van, rather the overall service
 class Transport
 {
     private:
-    static int incrementor,transport;
+    incrementor i,transport;
     string route[2];
     int TransportID;
     Student *students[MAX_ARR_SIZE];
 public:
     Transport(){
-        this->TransportID = incrementor++;
+        this->TransportID = i.getIncrementor();
         this->route[0] = "NA0";
         this->route[1] = "NA1";
         for (int i = 0; i < MAX_ARR_SIZE; i++) {
@@ -168,8 +216,8 @@ public:
     }
     
     void registerStudent(Student *s){
-        if (s->getPaidSemFee() == true && transport < MAX_ARR_SIZE && s->getCardActive() == true){
-            students[transport++] = s;
+        if (s->getPaidSemFee() == true && transport.getIncrementor() < MAX_ARR_SIZE && s->getCardActive() == true){
+            students[transport.Increment()] = s;
             s->setTransportStatus(true);
             
         } else {
@@ -190,15 +238,95 @@ public:
     }
 };
 
-int Transport::incrementor = 0;
-int Transport::transport = 0;
+// int Transport::incrementor = 0;
+// int Transport::transport = 0;
 
 
 
 
 int main(){
+    // cout << "creating Transport object ." << endl;
+    Transport t1;
+    // cout << "Transport object created." << endl;
+    
+    //          
 
+    // cout << "creating Student object1 ." << endl;
 
+    // rafay has not paid the fees, so his attendance will not be marked
+    Student s1(false, true, true, "Rafay");
+    // cout << "created Student object1 ." << endl;
+    
+    // cout << "creating Student object2 ." << endl;
+    
+    // ali has paid the fees and has an active card and has registered for transport, so his attendance is marked
+    Student s2(true, true, true, "Ali");    
+    // cout << "created Student object2 ." << endl;
+    
+    // cout << "creating Student object3 ." << endl;
+
+    // ali has paid the fees and has an active card but did not register for transport, so his attendance will be marked
+    Student s3(true, true, false, "Saad");
+    // cout << "created Student object3 ." << endl;
+    
+    
+    // cout << "registering s1." << endl;
+    t1.registerStudent(&s1); // s1 will fail registration as he has not paid the fees
+    // cout << "registered s1." << endl;
+    
+    // cout << "registering s2." << endl;
+    t1.registerStudent(&s2);
+    // cout << "registered s2." << endl;
+    
+    // cout << "registering s3." << endl;
+    t1.registerStudent(&s3);
+    // cout << "registered s3." << endl;
+    
+
+    // simulating attendance for 4 days
+    
+    int day = 0;
+    // day 1
+    s1.markAttendance(day);
+    s2.markAttendance(day);
+    s3.markAttendance(day);
+
+    // day 2
+    day++;
+    s1.markAttendance(day);
+    s2.markAttendance(day);
+
+    // day 3
+    day++;
+    s1.markAttendance(day);
+    s2.markAttendance(day);
+
+    // day 4
+    day++;
+    s1.markAttendance(day);
+    s3.markAttendance(day);
+
+    cout << "Attendance for s1: ";
+    s1.displaySheet();
+    cout << endl;
+
+    cout << "Attendance for s2: ";
+    s2.displaySheet();
+    cout << endl;
+
+    cout << "Attendance for s3: ";
+    s3.displaySheet();
+    cout << endl;
+
+    cout << "Displaying s1: " << endl;
+    s1.display();
+    cout << endl;
+    cout << "Displaying s2: " << endl;
+    s2.display();
+    cout << endl;
+    cout << "Displaying s3: " << endl;
+    s3.display();
+    cout << endl;
 
 
     return 0;

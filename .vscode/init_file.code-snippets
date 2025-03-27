@@ -16,7 +16,28 @@
 	// 	"description": "Log output to console"
 	// }
 
-	
+
+	"setter":{
+		"scope": "cpp",
+		"prefix": "set",
+		"body": ["",
+				  "void set_$1($2) {",
+				  "         $1 = $2;",
+				  "    }",
+				],
+		"description": "setter in cpp"
+	},
+	"getter":{
+		"scope": "cpp",
+		"prefix": "get",
+		"body": ["",
+				  "$1 get_$2() const {",
+				  "        return $2;",
+				  "    }",
+				  "",
+				],
+		"description": "getter in cpp"
+	},
 	"init_cpp":{
 		"scope": "cpp",
 		"prefix": "init",
