@@ -12,7 +12,7 @@ At the heart of this system is a `Person` class that stores universal data membe
 
 ### Functions:
 - `displayInfo()`: Shows personal details.
-- `updateInfo()`: Modifies personal details.
+- `updateInfo()`: Modifies ==personal== details.
 
 ### Derived Classes:
 - **Student**: Includes 
@@ -63,24 +63,133 @@ private:
     string name,id,address,phoneNumber,email;
 
 public:
-    Person(/* args */);
-    ~Person();
+    Person(/* args */){
+
+    }
+    void displayInfo(){
+        cout << "Name: " << this->name << endl;
+        cout << "ID: " << this->id << endl;
+        cout << "Address: " << this->address << endl;
+        cout << "Phone Number: " << this->phoneNumber << endl;
+        cout << "Email: " << this->email << endl;
+    }
+    void updateInfo(){
+        cout << "Enter Name: ";
+        cin >> this->name;
+        cout << "Enter ID: ";
+        cin >> this->id;
+        cout << "Enter Address: ";
+        cin >> this->address;
+        cout << "Enter Phone Number: ";
+        cin >> this->phoneNumber;
+        cout << "Enter Email: ";
+        cin >> this->email;
+    }
 };
 
-Person::Person(/* args */)
+
+class Student: public Person
 {
-}
+private:
+    int enrollmentYear, GPA, coursesEnrolled;
 
-Person::~Person()
+public:
+    Student(/* args */){}
+
+    void displayInfo(){
+        Person::displayInfo();
+        cout << "Enrollment Year: " << this->enrollmentYear << endl;
+        cout << "GPA: " << this->GPA << endl;
+        cout << "Courses Enrolled: " << this->coursesEnrolled << endl;
+    }
+
+    int get_coursesEnrolled(){
+        return this->coursesEnrolled;
+    }
+
+    void set_coursesEnrolled(int e)
+    {
+        this->coursesEnrolled = e;
+    }
+
+};
+class Professor: public Person
 {
-}
+private:
+    string department;
+    int coursesTaught, salary;
+
+public:
+    Professor(/* args */);
+
+    void displayInfo(){
+        Person::displayInfo();
+        cout << "Department: " << this->department << endl;
+        cout << "Courses Taught: " << this->coursesTaught << endl;
+        cout << "Salary: " << this->salary << endl;
+    }
+    
+};
 
 
+class Staff: public Person
+{
+private:
+    string department;
+    int position, salary;
+
+public:
+    Staff(/* args */);
+    
+    void displayInfo(){
+        Person::displayInfo();
+        cout << "Department: " << this->department << endl;
+        cout << "Position: " << this->position << endl;
+        cout << "Salary: " << this->salary << endl;
+    }
+};
+
+class Course
+{
+private:
+    int courseId, credits;
+    string schedule, courseName, instructor;
+
+public:
+
+    void registerStudent(Student s)
+    {
+        s.set_coursesEnrolled(s.get_coursesEnrolled()+1);
+    }
+    int calculateGrades()
+    {
+        return credits*3;
+    }
+
+   
+};
 
 
 int main(){
 
+    Student s;
+    s.updateInfo();
+    s.displayInfo();
 
+    Professor p;
+    p.updateInfo();
+    p.displayInfo();
+
+    Staff st;
+    st.updateInfo();
+    st.displayInfo();
+
+    Course c;
+    Student s1;
+    c.registerStudent(s1);
+    cout << "Courses Enrolled: " << s1.get_coursesEnrolled() << endl;
+    cout << "Grades: " << c.calculateGrades() << endl;
+    
 
 
     return 0;
