@@ -45,7 +45,37 @@
             "presentation": {
                 "reveal": "silent"
             }
-        }
+        }/* ,
+        {
+            "label": "Build and Run C++",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe", // Output file name matches the source file
+                "${file}" // The current file being edited
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Compile and run the current C++ file"
+        },
+        {
+            "label": "Run Executable",
+            "type": "shell",
+            "command": "${fileDirname}\\${fileBasenameNoExtension}.exe", // Run the compiled executable
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always", // Automatically open the terminal
+                "panel": "shared"
+            },
+            "dependsOn": "Build and Run C/C++" // First compile, then run
+        } */
     ],
     "version": "2.0.0"
 }
