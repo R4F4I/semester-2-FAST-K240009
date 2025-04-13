@@ -75,37 +75,55 @@ using namespace std;
 class User
 {
 private:
-    string Name,permissions[10], email;
+    string Name,permission, email;
     int ID, password;
 public:
-    User(/* args */){
+
+    
+    string get_Name() const {
+        return Name;
+    }
+    string get_email() const {
+        return email;
+    }
+    string get_permission() const {
+        return permission;
+    }
+    int get_ID() const {
+        return ID;
+    }
+    int get_password() const {
+        return password;
+    }
+    
+    
+    void set_permission(string p) {
+             permission = p;
+        }
+
+    User(){
         this->Name = "Default Name";
         this->ID = 0;
         this->email = "Default Email";
         this->password = 0;
-        for (int i = 0; i < 10; i++)
-        {
-            this->permissions[i] = "Default Permission";
-        }
+        this->permission = "NULL";
     }
-    User(string name, int id, string email, string permissions[], int password){
+    User(string name, int id, string email, int password){
         this->Name = name;
         this->ID = id;
         this->email = email;
         this->password = password;
-        for (int i = 0; i < 10; i++)
-        {
-            this->permissions[i] = permissions[i];
-        }
+        // this->permission = permission;
+        
     }
     void display(){
         cout << "Name: " << this->Name << endl;
         cout << "ID: " << this->ID << endl;
         cout << "Email: " << this->email << endl;
-        cout << "Permissions: ";
+        cout << "Permission: ";
         for (int i = 0; i < 10; i++)
         {
-            cout << this->permissions[i] << " ";
+            cout << this->permission[i] << " ";
         }
         cout << endl;
     }
@@ -122,44 +140,133 @@ public:
     }
     void accessLab(){
         cout << "Accessing lab..." << endl;
-        for (int i = 0; i < 10; i++)
+        
+        if (this->permission == "STUDENT")
         {
-            if (this->permissions[i] == "STUDENT")
-            {
-                cout << "Student access granted!" << endl;
-            }
-            else if (this->permissions[i] == "TA")
-            {
-                cout << "TA access granted!" << endl;
-            }
-            else if (this->permissions[i] == "PROFESSOR")
-            {
-                cout << "Professor access granted!" << endl;
-            }
+            cout << "Student access granted!" << endl;
+        }
+        else if (this->permission == "TA")
+        {
+            cout << "TA access granted!" << endl;
+        }
+        else if (this->permission == "PROFESSOR")
+        {
+            cout << "Professor access granted!" << endl;
         }
     }
 
+    friend int  passwordHashing(int password);
+    friend void authenticateAndPerformAction(User* user, string action);
 };
 
 
 class Student : public User
 {
 private:
-    /* data */
+    int assignments[10]; // 0 = not submitted, 1 = submitted
 public:
-    Student(/* args */);
+    Student():User(){};
+    Student(string n,int i,string e,int pa):User(n,i,e,pa){
+        set_permission("STUDENT");
+        for (int i = 0; i < 10; i++)
+        {
+            this->assignments[i] = 0;
+        }
+    };
+
+
+    void display(){
+        User::display();
+        cout << "Assignments: ";
+        for (int i = 0; i < 10; i++)
+        {
+            cout << this->assignments[i] << " ";
+        }
+        cout << endl;
+    }
+
+    void submitAssignment(int index){
+        if (index >= 0 && index < 10)
+        {
+            this->assignments[index] = 1;
+            cout << "Assignment " << index << " submitted!" << endl;
+        }
+        else
+        {
+            cout << "Invalid assignment index!" << endl;
+        }
+    }
     
 };
 
 
 
 
-class TA : public User
+class TA : public Student
 {
 private:
-    /* data */
+    Student *assignedStudents[10]; // max 10 students
+    string projects[2]; // max 2 projects
 public:
-    TA(/* args */);
+    TA():Student(){};
+    TA(string n, int i, string e, int pa) : Student(n, i, e, pa) {
+        set_permission("TA");
+    }
+    void viewProjects(){
+        cout << "Projects: ";
+        for (int i = 0; i < 2; i++)
+        {
+            cout << this->projects[i] << " ";
+        }
+        cout << endl;
+    }
+    void assignStudent(Student *student){
+        if (get_permission() == "TA")
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (this->assignedStudents[i] == nullptr)
+                {
+                    this->assignedStudents[i] = student;
+                    cout << "Student assigned!" << endl;
+                    return;
+                }
+            }
+            cout << "Max students assigned!" << endl;
+        } else {
+            cout << "Permission denied!" << endl;
+        }
+    }
+    
+    void manageStudent(Student *student){
+        if (get_permission() == "TA")
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (this->assignedStudents[i] == student)
+                {
+                    cout << "Managing student..." << endl;
+                    return;
+                }
+            }
+            cout << "Student not assigned!" << endl;
+        } else
+        {
+            cout << "Permission denied!" << endl;
+        }
+    }
+    void display(){
+        User::display();
+        cout << "Assigned Students: ";
+        for (int i = 0; i < 10; i++)
+        {
+            if (this->assignedStudents[i] != nullptr)
+            {
+                cout << this->assignedStudents[i]->get_Name() << " ";
+            }
+        }
+        cout << endl;
+    }
     
 };
 
@@ -169,13 +276,57 @@ class Professor : public User
 {
 private:
     /* data */
-public:
-    Professor(/* args */);
+    public:
+    Professor():User(){};
+    Professor(string n,int i,string e,int pa):User(n,i,e,pa){
+        set_permission("PROFESSOR");
+    };
+
+
     
 };
 
 
 
+int passwordHashing(int password){
+    int hash = 5381;
+    while (password != 0)
+    {
+        hash = hash*33 + (password % 10);
+        password /= 10;
+    }
+    return hash;
+}
+
+
+void authenticateAndPerformAction(User* user,string action){
+    int password;
+    cout << "Enter password: ";
+    cin >> password;
+    if (user->get_password() == passwordHashing(password))
+    {
+        cout << "Authenticated successfully!" << endl;
+        if (action == "accessLab")
+        {
+            user->accessLab();
+        }
+        else if (action == "submitAssignment")
+        {
+            int index;
+            cout << "Enter assignment index to submit: ";
+            cin >> index;
+            ((Student*)user)->submitAssignment(index);
+        }
+        else if (action == "viewProjects")
+        {
+            ((TA*)user)->viewProjects();
+        }
+    }
+    else
+    {
+        cout << "Authentication failed!" << endl;
+    }
+}
 
 int main(){
 
