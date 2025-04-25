@@ -1,0 +1,5 @@
+HelloWorld! Programming
+3.14 42@test 100%
+C++ File-Read Example
+Space   Tab	Separated
+Goodbye! Visit_Again :)

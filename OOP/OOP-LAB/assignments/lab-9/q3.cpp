@@ -35,17 +35,46 @@ using namespace std;
 class Book
 {
 private:
-    /* data */
+    string title, author, ISBN;
 public:
-    Book(/* args */);
-    ~Book();
+    Book(string t = "new title",string a = "new author",string I = "new ISBN") title(t),author(a),ISBN(I){}
+    
+    string getTitle(){
+        return title;
+    }
+    string getAuthor(){
+        return author;
+    }
+    string getISBN(){
+        return ISBN;
+    }
+
+
 };
 
-Book::Book(/* args */)
+class Library
+{
+private:
+    Book books[10];
+    int index;
+public:
+    Library();
+    
+    void addBook(book b){
+        this->books[this->index] = b;
+        index++;
+    }
+    void removeBook(){
+        index--;
+    }
+
+};
+
+Library::Library()
 {
 }
 
-Book::~Book()
+Library::~Library()
 {
 }
 

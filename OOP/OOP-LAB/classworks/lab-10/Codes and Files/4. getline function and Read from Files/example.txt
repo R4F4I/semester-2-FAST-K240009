@@ -1,0 +1,5 @@
+This is line 1 of the example file.
+Here comes line 2 with some basic text.
+Line 3 shows how files store data persistently.
+The fourth line contains numbers: 42, 7.5, 100.
+Finally, line 5 demonstrates end-of-file handling.

@@ -1,0 +1,2 @@
+Hello, this file was opened using the constructor method.
+File handling in C++ is fun and useful!

@@ -1,0 +1,5 @@
+12 , fdsg , 34
+12 , fghgf , 32
+12 , fsdg , 2
+22 , gfg , 2
+0 , gfg , 2
