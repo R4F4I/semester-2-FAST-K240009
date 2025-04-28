@@ -49,6 +49,7 @@ output.
 using namespace std;
 
 
+///////////////////////////////////////////////////////
 class Driver
 {
 private:
@@ -60,50 +61,75 @@ Driver(){}
 
 };
 
-
-class Vechicle
+///////////////////////////////////////////////////////
+class Vehicle
 {
 private:
     int seats;
-    string route;
     bool ACservice;
-    Driver driver;
+    Driver* driver;
 public:
-Vechicle(){}
+Vehicle(int s=52, string r = "default route") : seats(s), route(r){}
 
     friend class BookingSystem;
 
 };
 
-class Bus : public Vechicle
+///////////////////////////////////////////////////////
+class Bus : public Vehicle
 {
 public:
-Bus(int s=52, string r = "default route") : seats(s), route(r) {}
+Bus(string r = "default route") : Vechicle(52,r) {}
 
 };
-class Coaster : public Vechicle
+///////////////////////////////////////////////////////
+class Coaster : public Vehicle
 {
-public:
-Coaster(int s=32, string r = "default route") : seats(s), route(r) {}
-
+    public:
+    Coaster(string r = "default route") : Vechicle(32,r) {}
+    
 };
+///////////////////////////////////////////////////////
+class Routes{
+    string startingRoute;
+    string EndingRoute;
+    int distCovered;
+}
+///////////////////////////////////////////////////////
 
-
-class Transport
+class Transporter
 {
-private:
-
-    Vechicle Vechicles[10];
-    Driver Derivers[10];
+    private:
+    
+    Vehicle Vehicles[10];
+    Driver Drivers[10];
     string Routes[10];
+    
+    public:
+    Transporter(){}
+    
+    friend class BookingSystem;
+    
+};
+///////////////////////////////////////////////////////
+
+class User{
+    string name;
+    bool hasPaid;
 
 public:
-Transport(){}
+    void makePayment{
+        this->hasPaid = true;
+    }
+};
 
-    friend class BookingSystem;
+///////////////////////////////////////////////////////
+
+class Student : public User{
 
 };
 
+///////////////////////////////////////////////////////
 class BookingSystem
 {
 private:
