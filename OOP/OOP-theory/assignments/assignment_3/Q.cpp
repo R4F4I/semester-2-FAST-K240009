@@ -118,6 +118,7 @@ class User{
     bool hasPaid;
 
 public:
+    User(n = "name",b=false): name(n), hasPaid(b){}
     void makePayment{
         this->hasPaid = true;
     }
@@ -126,25 +127,39 @@ public:
 ///////////////////////////////////////////////////////
 
 class Student : public User{
-
+public:
+    Student(n = "name",b=false):User(n,b){}
 };
 
 ///////////////////////////////////////////////////////
+// 1 obj represents 1 record
 class BookingSystem
 {
 private:
 
-    string registerdUsers[100];
+    Vechicle* vehicle;
+    User* User;
     float fare;
 
 public:
 BookingSystem(){}
 
-    float calcFare(){
+    float calcFare(User& user){
+        if (vehicle->ACservice)
+        {
+            fare+=2000;
+        }
+        if (user.)
+        {
+        
+        }
 
     }
 
 };
+
+///////////////////////////////////////////////////////
+
 
 int main(){
 
