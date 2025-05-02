@@ -57,7 +57,30 @@ private:
     string name;
 
 public:
-Driver(){}
+Driver(string n = "def") :name(n) {}
+
+};
+
+///////////////////////////////////////////////////////
+class Route{
+    string startingRoute;
+    string endingRoute;
+    int distCovered;
+
+public:
+    Route(string s = "start",string e = "end", int d = 0): startingRoute(s),endingRoute(e),distCovered(d){}
+    Route(Route& r){
+        this->startingRoute = r.startingRoute;
+        this->endingRoute = r.endingRoute;
+        this->distCovered = r.distCovered;
+    }
+    string getRoute() const {
+        return startingRoute + " to " + endingRoute;
+    }
+
+    int getDistance() const {
+        return distCovered;
+    }
 
 };
 
@@ -68,8 +91,25 @@ private:
     int seats;
     bool ACservice;
     Driver* driver;
+    Route* route;
 public:
-Vehicle(int s=52, string r = "default route") : seats(s), route(r){}
+    Vehicle(Route& r,int s=52,bool ac = false) : seats(s),ACservice(ac) {
+        // ,string start = "start",string end = "end",int dist = 0
+        route = new Route(r); 
+    }
+    Vehicle(Vehicle& v){
+        this->seats = v.seats;
+        this->ACservice = v.ACservice;
+        this->driver = v.driver;
+        this->route = v.route;
+    }
+    bool hasAC() const {
+        return ACservice;
+    }
+
+    string getRouteInfo() const {
+        return route->getRoute();
+    }
 
     friend class BookingSystem;
 
@@ -79,92 +119,197 @@ Vehicle(int s=52, string r = "default route") : seats(s), route(r){}
 class Bus : public Vehicle
 {
 public:
-Bus(string r = "default route") : Vechicle(52,r) {}
+    Bus(Route& r,bool ac = false) : Vehicle(r,52,ac) {}
 
 };
 ///////////////////////////////////////////////////////
 class Coaster : public Vehicle
 {
     public:
-    Coaster(string r = "default route") : Vechicle(32,r) {}
+    Coaster(Route& r,bool ac = false) : Vehicle(r,32,ac) {}
     
 };
-///////////////////////////////////////////////////////
-class Routes{
-    string startingRoute;
-    string EndingRoute;
-    int distCovered;
-}
 ///////////////////////////////////////////////////////
 
 class Transporter
 {
     private:
     
-    Vehicle Vehicles[10];
-    Driver Drivers[10];
-    string Routes[10];
+    Vehicle* vehicles[10];
+    Driver drivers[10];
+    string routes[10];
     
     public:
-    Transporter(){}
+    Transporter() {
+        for (int i = 0; i < 10; i++) vehicles[i] = nullptr;
+    }
+
+    ~Transporter() {
+        for (int i = 0; i < 10; i++)
+            if (vehicles[i]){ 
+                delete vehicles[i];  // clean up
+            }
+    }
     
     friend class BookingSystem;
+    friend int main();
     
 };
 ///////////////////////////////////////////////////////
 
-class User{
+class User {
+protected:
     string name;
     bool hasPaid;
+    string userType;
 
 public:
-    User(n = "name",b=false): name(n), hasPaid(b){}
-    void makePayment{
-        this->hasPaid = true;
+    User(string n = "User", bool b = false, string type = "User")
+        : name(n), hasPaid(b), userType(type) {}
+
+    void makePayment() {
+        hasPaid = true;
     }
+
+    bool paid() const {
+        return hasPaid;
+    }
+
+    string getType() const {
+        return userType;
+    }
+
+    string getName() const {
+        return name;
+    }
+
+    friend class BookingSystem;
 };
+
 
 ///////////////////////////////////////////////////////
 
 class Student : public User{
-public:
-    Student(n = "name",b=false):User(n,b){}
+    public:
+    Student(string n = "name",bool b=false)
+        :User(n,b,"Student"){}
 };
+///////////////////////////////////////////////////////
+
+class Faculty : public User{
+    public:
+    Faculty(string n = "name",bool b=false)
+        :User(n,b,"Faculty"){}
+};
+
+class Seat {
+private:
+    int seatNum;
+    bool isBooked;
+    User* user;
+
+public:
+    Seat(int s = 0) : seatNum(s), isBooked(false), user(nullptr) {}
+
+    bool book(User* u) {
+        if (!isBooked) {
+            isBooked = true;
+            user = u;
+            return true;
+        }
+        return false;
+    }
+
+    bool booked() const {
+        return isBooked;
+    }
+};
+
+
+///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
 // 1 obj represents 1 record
-class BookingSystem
-{
+class BookingSystem {
 private:
-
-    Vechicle* vehicle;
-    User* User;
+    Vehicle* vehicle;
     float fare;
 
 public:
-BookingSystem(){}
+    BookingSystem(Vehicle* v) : vehicle(v), fare(0) {}
 
-    float calcFare(User& user){
-        if (vehicle->ACservice)
-        {
-            fare+=2000;
-        }
-        if (user.)
-        {
-        
+    float calcFare(User& user) {
+        if (!user.paid()) {
+            throw runtime_error("Booking denied: Payment not completed.");
         }
 
+        // Basic fare by role
+        fare = (user.getType() == "Faculty") ? 5000 : 3000;
+
+        if (vehicle->hasAC()) {
+            fare += 2000;
+        }
+
+        return fare;
     }
 
+    void bookSeat(User& user) {
+        try {
+            float total = calcFare(user);
+            cout << "Booking successful for " << user.getName() << " (" << user.getType() << ") on route " << vehicle->getRouteInfo() << ". Fare: Rs. " << total << endl;
+        } 
+        catch (const exception& e) {
+            cout << e.what() << endl;
+        }
+    }
 };
+
 
 ///////////////////////////////////////////////////////
 
 
-int main(){
+int main() {
+    // Create route
+    Route r1("North Karachi", "FAST-NUCES", 20);
 
+    // Create transporter
+    Transporter nadeem, jadoon;
 
+    // Add a Bus and a Coaster to the transporter's vehicle fleet
+    Bus* bus1 = new Bus(r1, true);         // AC bus
+    Coaster* coaster1 = new Coaster(r1);   // Non-AC coaster
 
+    // Assign vehicles to transporter
+    nadeem.vehicles[0] = bus1;
+    nadeem.vehicles[1] = coaster1;
+
+    // Assign drivers to transporter
+    nadeem.drivers[0] = Driver("Imran");
+    nadeem.drivers[1] = Driver("Kashif");
+
+    // Create users
+    Faculty f1("Dr. Ahsan");
+    Student s1("Ali");
+
+    // Booking system using the transporter's bus
+    BookingSystem bookingBus(bus1);
+
+    // Attempt booking without payment
+    bookingBus.bookSeat(f1); // should show error
+
+    // Make payment
+    f1.makePayment();
+    s1.makePayment();
+
+    // Book seats
+    bookingBus.bookSeat(f1);
+    bookingBus.bookSeat(s1);
+
+    cout<<"deleting...\n";
+    // Clean up
+    delete bus1;
+    delete coaster1;
+    cout<<"deleted\n";
 
     return 0;
 }
