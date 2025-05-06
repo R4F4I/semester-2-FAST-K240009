@@ -5,4 +5,4 @@
 !.gitignore
 
 # Except .exe files
-!*.exe
+*.exe
