@@ -35,10 +35,7 @@ int main(){
     string name, email;
 
     file.open("signup.txt",ios::app); // Open in append mode
-    if (!file) {
-        cout << "Error opening file!" << endl;
-        return 1;
-    }
+    if (!file) return 1;
 
     cout << "Enter your name: ";
     getline(cin, name); // Use getline to allow spaces in the name
